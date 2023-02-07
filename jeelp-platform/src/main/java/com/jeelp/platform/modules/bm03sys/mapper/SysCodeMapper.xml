@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm03sys.mapper.SysCodeMapper">
+
+	<sql id="columns">
+		T.CODE_ID codeId ,
+		T.CODE_DESC codeDesc ,
+		T.REMARK remark ,
+		T.ORDER_COL orderCol 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_sys_code T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm03sys.entity.SysCodeEntity" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/> 
+		from t_sys_code T where 1=1
+		<if test="paramId != null and paramId != ''"> and T.PARAM_ID like concat('%',#{paramId,jdbcType=VARCHAR},'%')</if>
+		<if test="codeId != null and codeId != ''"> and T.CODE_ID like concat('%',#{codeId,jdbcType=VARCHAR},'%')</if>
+		<if test="codeDesc != null and codeDesc != ''"> and T.CODE_DESC like concat('%',#{codeDesc,jdbcType=VARCHAR},'%')</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm03sys.entity.SysCodeEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_sys_code T
+		where  T.CODE_ID = #{codeId,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm03sys.entity.SysCodeEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_sys_code T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm03sys.entity.SysCodeEntity">
+		insert into t_sys_code
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="codeId != null">CODE_ID,</if>
+	 		<if test="codeDesc != null">CODE_DESC,</if>
+	 		<if test="remark != null">REMARK,</if>
+	 		<if test="orderCol != null">ORDER_COL,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="codeId != null">#{codeId,jdbcType=VARCHAR},</if>
+			<if test="codeDesc != null">#{codeDesc,jdbcType=VARCHAR},</if>
+			<if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+			<if test="orderCol != null">#{orderCol,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm03sys.entity.SysCodeEntity">
+		update t_sys_code T
+		<set>
+			<if test="codeId != null">CODE_ID = #{codeId,jdbcType=VARCHAR},</if>
+			<if test="codeDesc != null">CODE_DESC = #{codeDesc,jdbcType=VARCHAR},</if>
+			<if test="remark != null">REMARK = #{remark,jdbcType=VARCHAR},</if>
+			<if test="orderCol != null">ORDER_COL = #{orderCol,jdbcType=VARCHAR},</if>
+		</set>
+		where  T.CODE_ID = #{codeId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_sys_code where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_sys_code where 1=1
+		<foreach collection="list" item="id" index="index" open=" and CODE_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm03sys.entity.SysCodeEntity">
+		delete from t_sys_code 
+		where  CODE_ID = #{codeId,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.protal.modules.admin.mapper.TopicInfoMapper">
+
+	<sql id="columns">
+		T.INFO_ID infoId ,
+		T.TOPIC_ID topicId ,
+		T.`DESC` `desc`,
+		T.CATE_ID cateId ,
+		T.CATE_CODE cateCode ,
+		T.TITLE title ,
+		T.CONTENT content ,
+		T.MAIN_IMG_ID mainImgId ,
+		T.`STATUS` `status` ,
+		T.RELEASE_USER releaseUser ,
+		T.RELEASE_TIME releaseTime ,
+		T.INPUT_USER inputUser ,
+		T.INPUT_TIME inputTime ,
+		T.UPDATE_USER updateUser ,
+		T.UPDATE_TIME updateTime ,
+		T.DEL_MARK delMark 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_protal_topic_info T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.protal.modules.admin.entity.TopicInfo" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/> 
+		from t_protal_topic_info T where 1=1
+        <if test="topicId != null and topicId != ''"> and T.TOPIC_ID = #{topicId,jdbcType=VARCHAR}</if>
+        <if test="cateId != null and cateId != ''"> and T.CATE_ID = #{cateId,jdbcType=VARCHAR}</if>
+        <if test="title != null and title != ''"> and T.TITLE like concat('%',#{title,jdbcType=VARCHAR},'%')</if>
+		<if test="status != null and status != ''"> and T.`STATUS` = #{status ,jdbcType=VARCHAR}</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.protal.modules.admin.entity.TopicInfo" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_protal_topic_info T
+		where  T.INFO_ID = #{infoId,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.protal.modules.admin.entity.TopicInfo" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_protal_topic_info T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.protal.modules.admin.entity.TopicInfo">
+		insert into t_protal_topic_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="infoId != null">INFO_ID,</if>
+	 		<if test="topicId != null">TOPIC_ID,</if>
+	 		<if test="desc != null">`DESC`,</if>
+	 		<if test="cateId != null">CATE_ID,</if>
+	 		<if test="cateCode != null">CATE_CODE,</if>
+	 		<if test="title != null">TITLE,</if>
+	 		<if test="content != null">CONTENT,</if>
+	 		<if test="mainImgId != null">MAIN_IMG_ID,</if>
+	 		<if test="`status` != null">`STATUS`,</if>
+	 		<if test="releaseUser != null">RELEASE_USER,</if>
+	 		<if test="releaseTime != null">RELEASE_TIME,</if>
+	 		<if test="inputUser != null">INPUT_USER,</if>
+	 		<if test="inputTime != null">INPUT_TIME,</if>
+	 		<if test="updateUser != null">UPDATE_USER,</if>
+	 		<if test="updateTime != null">UPDATE_TIME,</if>
+	 		<if test="delMark != null">DEL_MARK,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="infoId != null">#{infoId,jdbcType=VARCHAR},</if>
+			<if test="topicId != null">#{topicId,jdbcType=VARCHAR},</if>
+			<if test="desc != null">#{desc,jdbcType=VARCHAR},</if>
+			<if test="cateId != null">#{cateId,jdbcType=VARCHAR},</if>
+			<if test="cateCode != null">#{cateCode,jdbcType=VARCHAR},</if>
+			<if test="title != null">#{title,jdbcType=VARCHAR},</if>
+			<if test="content != null">#{content,jdbcType=VARCHAR},</if>
+			<if test="mainImgId != null">#{mainImgId,jdbcType=VARCHAR},</if>
+			<if test="status != null">#{status,jdbcType=VARCHAR},</if>
+			<if test="releaseUser != null">#{releaseUser,jdbcType=VARCHAR},</if>
+			<if test="releaseTime != null">#{releaseTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delMark != null">#{delMark,jdbcType=NUMERIC},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.protal.modules.admin.entity.TopicInfo">
+		update t_protal_topic_info T
+		<set>
+			<if test="infoId != null">INFO_ID = #{infoId,jdbcType=VARCHAR},</if>
+			<if test="topicId != null">TOPIC_ID = #{topicId,jdbcType=VARCHAR},</if>
+			<if test="desc != null">`DESC` = #{desc,jdbcType=VARCHAR},</if>
+			<if test="cateId != null">CATE_ID = #{cateId,jdbcType=VARCHAR},</if>
+			<if test="cateCode != null">CATE_CODE = #{cateCode,jdbcType=VARCHAR},</if>
+			<if test="title != null">TITLE = #{title,jdbcType=VARCHAR},</if>
+			<if test="content != null">CONTENT = #{content,jdbcType=VARCHAR},</if>
+			<if test="mainImgId != null">MAIN_IMG_ID = #{mainImgId,jdbcType=VARCHAR},</if>
+			<if test="status != null">`STATUS` = #{status,jdbcType=VARCHAR},</if>
+			<if test="releaseUser != null">RELEASE_USER = #{releaseUser,jdbcType=VARCHAR},</if>
+			<if test="releaseTime != null">RELEASE_TIME = #{releaseTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">INPUT_USER = #{inputUser,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">INPUT_TIME = #{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateUser != null">UPDATE_USER = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="delMark != null">DEL_MARK = #{delMark,jdbcType=NUMERIC},</if>
+		</set>
+		where  T.INFO_ID = #{infoId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_protal_topic_info where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_protal_topic_info where 1=1
+		<foreach collection="list" item="id" index="index" open=" and INFO_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.protal.modules.admin.entity.TopicInfo">
+		delete from t_protal_topic_info 
+		where  INFO_ID = #{infoId,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

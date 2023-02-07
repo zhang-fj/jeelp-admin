@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm02priv.mapper.RoleMapper">
+
+	<sql id="columns">
+		T.ROLE_ID roleId ,
+		T.ROLE_CODE roleCode ,
+		T.ROLE_NAME roleName ,
+		T.ROLE_DESC roleDesc ,
+		T.INPUT_TIME inputTime ,
+		T.UPDATE_TIME updateTime ,
+		T.INPUT_USER inputUser ,
+		T.UPDATE_USER updateUser ,
+		T.DEL_MARK delMark 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_priv_role T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm02priv.entity.RoleEntity" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/> 
+		from t_priv_role T where 1=1
+		<if test="roleCode != null and roleCode != ''"> and T.ROLE_CODE like concat('%',#{roleCode,jdbcType=VARCHAR},'%')</if>
+		<if test="roleName != null and roleName != ''"> and T.ROLE_NAME like concat('%',#{roleName,jdbcType=VARCHAR},'%')</if>
+		<if test="roleDesc != null and roleDesc != ''"> and T.ROLE_DESC like concat('%',#{roleDesc,jdbcType=VARCHAR},'%')</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm02priv.entity.RoleEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_priv_role T
+		where  T.ROLE_ID = #{roleId,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm02priv.entity.RoleEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_priv_role T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm02priv.entity.RoleEntity">
+		insert into t_priv_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="roleId != null">ROLE_ID,</if>
+	 		<if test="roleCode != null">ROLE_CODE,</if>
+	 		<if test="roleName != null">ROLE_NAME,</if>
+	 		<if test="roleDesc != null">ROLE_DESC,</if>
+	 		<if test="inputTime != null">INPUT_TIME,</if>
+	 		<if test="updateTime != null">UPDATE_TIME,</if>
+	 		<if test="inputUser != null">INPUT_USER,</if>
+	 		<if test="updateUser != null">UPDATE_USER,</if>
+	 		<if test="delMark != null">DEL_MARK,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">#{roleId,jdbcType=VARCHAR},</if>
+			<if test="roleCode != null">#{roleCode,jdbcType=VARCHAR},</if>
+			<if test="roleName != null">#{roleName,jdbcType=VARCHAR},</if>
+			<if test="roleDesc != null">#{roleDesc,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">#{delMark,jdbcType=NUMERIC},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm02priv.entity.RoleEntity">
+		update t_priv_role T
+		<set>
+			<if test="roleId != null">ROLE_ID = #{roleId,jdbcType=VARCHAR},</if>
+			<if test="roleCode != null">ROLE_CODE = #{roleCode,jdbcType=VARCHAR},</if>
+			<if test="roleName != null">ROLE_NAME = #{roleName,jdbcType=VARCHAR},</if>
+			<if test="roleDesc != null">ROLE_DESC = #{roleDesc,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">INPUT_TIME = #{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">INPUT_USER = #{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">DEL_MARK = #{delMark,jdbcType=NUMERIC},</if>
+		</set>
+		where  T.ROLE_ID = #{roleId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_priv_role where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_priv_role where 1=1
+		<foreach collection="list" item="id" index="index" open=" and ROLE_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm02priv.entity.RoleEntity">
+		delete from t_priv_role 
+		where  ROLE_ID = #{roleId,jdbcType=VARCHAR}  
+	</delete>
+	
+	<!-- 根据角色ID删除角色功能授权 -->
+	<delete id="deleteRoleFuncs" parameterType="java.util.Map">
+		delete from t_priv_role_func 
+		where  ROLE_ID = #{roleId,jdbcType=VARCHAR}  
+	</delete>
+	
+	<!-- 批量新增角色功能授权 -->
+	<insert id="insertRoleFuncs" parameterType="java.util.List">
+		insert into t_priv_role_func(func_id,role_id)
+		<foreach collection="list" item="item" index="index" separator="union all">
+		 (select #{item.funcId,jdbcType=VARCHAR},#{item.roleId,jdbcType=VARCHAR} from dual)
+      	</foreach>
+	</insert>
+	
+	<!-- 获取角色授权功能id数组 -->
+	<select id="getAuthFuncIds" resultType="java.lang.String">
+		select T.func_id from t_priv_role_func T,t_priv_func pf 
+		where T.ROLE_ID=#{roleId,jdbcType=VARCHAR}
+		  and pf.func_id = T.func_id and pf.is_leaf = '1'
+	</select>
+
+</mapper>

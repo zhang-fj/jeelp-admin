@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm02priv.mapper.PostRoleMapper">
+
+	<sql id="columns">
+		T.POST_ID postId ,
+		T.ROLE_ID roleId 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_priv_post_role T where 1=1
+		<if test="postId != null and postId != ''"> and T.POST_ID = #{postId,jdbcType=VARCHAR}</if>
+		<if test="roleId != null and roleId != ''"> and T.ROLE_ID = #{roleId,jdbcType=VARCHAR}</if>
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm02priv.entity.PostRoleEntity" parameterType="java.util.Map">
+		select distinct
+			<include refid="columns"/>,
+			PP.POST_CODE postCOde,
+			PP.POST_NAME postName,
+			PR.ROLE_CODE roleCode,
+			PR.ROLE_NAME roleName 
+		from t_priv_post_role T,t_priv_post PP,t_priv_role PR 
+		where T.post_id = PP.post_id and T.role_id = PR.role_id
+		<if test="userId != null and userId != ''"> 
+			and T.POST_ID in(select PU.POST_ID from t_priv_post_user pu where pu.USER_ID = #{userId,jdbcType=VARCHAR} ) 
+		</if>
+		<if test="postId != null and postId != ''"> and T.POST_ID = #{postId,jdbcType=VARCHAR}</if>
+		<if test="roleId != null and roleId != ''"> and T.ROLE_ID = #{roleId,jdbcType=VARCHAR}</if>
+		<if test="postCode != null and postCode != ''"> and PP.POST_CODE like concat('%',#{postCode,jdbcType=VARCHAR},'%')</if>
+		<if test="postName != null and postName != ''"> and PP.POST_NAME like concat('%',#{postName,jdbcType=VARCHAR},'%')</if>
+		<if test="roleCode != null and roleCode != ''"> and PR.ROLE_CODE like concat('%',#{roleCode,jdbcType=VARCHAR},'%')</if>
+		<if test="roleName != null and roleName != ''"> and PR.ROLE_NAME like concat('%',#{roleName,jdbcType=VARCHAR},'%')</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm02priv.entity.PostRoleEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_priv_post_role T
+		where  T.ROLE_ID = #{roleId,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm02priv.entity.PostRoleEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_priv_post_role T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm02priv.entity.PostRoleEntity">
+		insert into t_priv_post_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="postId != null">POST_ID,</if>
+	 		<if test="roleId != null">ROLE_ID,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="postId != null">#{postId,jdbcType=VARCHAR},</if>
+			<if test="roleId != null">#{roleId,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm02priv.entity.PostRoleEntity">
+		update t_priv_post_role T
+		<set>
+			<if test="postId != null">POST_ID = #{postId,jdbcType=VARCHAR},</if>
+			<if test="roleId != null">ROLE_ID = #{roleId,jdbcType=VARCHAR},</if>
+		</set>
+		where  T.ROLE_ID = #{roleId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_priv_post_role where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_priv_post_role where 1=1
+		<foreach collection="list" item="id" index="index" open=" and concat(POST_ID,'-',ROLE_ID) in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm02priv.entity.PostRoleEntity">
+		delete from t_priv_post_role 
+		where  ROLE_ID = #{roleId,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

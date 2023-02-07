@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm03sys.mapper.SysLogsMapper">
+
+	<sql id="columns">
+		T.LOG_ID logId ,
+		T.DESCRIPTION description ,
+		T.LOG_TYPE logType ,
+		T.METHOD method ,
+		T.PARAMS params ,
+		T.REQUEST_IP requestIp ,
+		T.TIME time ,
+		T.USERNAME username ,
+		T.ADDRESS address ,
+		T.BROWSER browser ,
+		T.EXCEPTION_DETAIL exceptionDetail ,
+		T.INPUT_TIME inputTime 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_sys_logs T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm03sys.entity.SysLogs" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/> 
+		from t_sys_logs T where 1=1
+        <if test="logType != null and logType != ''"> and T.LOG_TYPE  = #{logType,jdbcType=VARCHAR}</if>
+        <if test="blurry != null and blurry != ''">
+         and ( T.METHOD like concat('%',#{blurry,jdbcType=VARCHAR},'%')
+               or T.PARAMS  like concat('%',#{blurry,jdbcType=VARCHAR},'%')
+               or T.USERNAME  like concat('%',#{blurry,jdbcType=VARCHAR},'%')
+               or T.ADDRESS  like concat('%',#{blurry,jdbcType=VARCHAR},'%')
+               or T.REQUEST_IP  like concat('%',#{blurry,jdbcType=VARCHAR},'%')
+               or T.DESCRIPTION  like concat('%',#{blurry,jdbcType=VARCHAR},'%')
+            )
+        </if>
+        <if test="username != null and username != ''">
+         and T.USERNAME  = #{username,jdbcType=VARCHAR}
+        </if>
+        order by T.INPUT_TIME desc
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm03sys.entity.SysLogs" parameterType="java.lang.String">
+		select
+			<include refid="columns"/>
+		from t_sys_logs T
+		where  T.LOG_ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm03sys.entity.SysLogs" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_sys_logs T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm03sys.entity.SysLogs">
+		insert into t_sys_logs
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="logId != null">LOG_ID,</if>
+	 		<if test="description != null">DESCRIPTION,</if>
+	 		<if test="logType != null">LOG_TYPE,</if>
+	 		<if test="method != null">METHOD,</if>
+	 		<if test="params != null">PARAMS,</if>
+	 		<if test="requestIp != null">REQUEST_IP,</if>
+	 		<if test="time != null">TIME,</if>
+	 		<if test="username != null">USERNAME,</if>
+	 		<if test="address != null">ADDRESS,</if>
+	 		<if test="browser != null">BROWSER,</if>
+	 		<if test="exceptionDetail != null">EXCEPTION_DETAIL,</if>
+	 		<if test="inputTime != null">INPUT_TIME,</if>
+	 		<if test="updateTime != null">UPDATE_TIME,</if>
+	 		<if test="inputUser != null">INPUT_USER,</if>
+	 		<if test="updateUser != null">UPDATE_USER,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="logId != null">#{logId,jdbcType=VARCHAR},</if>
+			<if test="description != null">#{description,jdbcType=VARCHAR},</if>
+			<if test="logType != null">#{logType,jdbcType=VARCHAR},</if>
+			<if test="method != null">#{method,jdbcType=VARCHAR},</if>
+			<if test="params != null">#{params,jdbcType=VARCHAR},</if>
+			<if test="requestIp != null">#{requestIp,jdbcType=VARCHAR},</if>
+			<if test="time != null">#{time,jdbcType=BIGINT},</if>
+			<if test="username != null">#{username,jdbcType=VARCHAR},</if>
+			<if test="address != null">#{address,jdbcType=VARCHAR},</if>
+			<if test="browser != null">#{browser,jdbcType=VARCHAR},</if>
+			<if test="exceptionDetail != null">#{exceptionDetail,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm03sys.entity.SysLogs">
+		update t_sys_logs T
+		<set>
+			<if test="logId != null">LOG_ID = #{logId,jdbcType=VARCHAR},</if>
+			<if test="description != null">DESCRIPTION = #{description,jdbcType=VARCHAR},</if>
+			<if test="logType != null">LOG_TYPE = #{logType,jdbcType=VARCHAR},</if>
+			<if test="method != null">METHOD = #{method,jdbcType=VARCHAR},</if>
+			<if test="params != null">PARAMS = #{params,jdbcType=VARCHAR},</if>
+			<if test="requestIp != null">REQUEST_IP = #{requestIp,jdbcType=VARCHAR},</if>
+			<if test="time != null">TIME = #{time,jdbcType=BIGINT},</if>
+			<if test="username != null">USERNAME = #{username,jdbcType=VARCHAR},</if>
+			<if test="address != null">ADDRESS = #{address,jdbcType=VARCHAR},</if>
+			<if test="browser != null">BROWSER = #{browser,jdbcType=VARCHAR},</if>
+			<if test="exceptionDetail != null">EXCEPTION_DETAIL = #{exceptionDetail,jdbcType=VARCHAR},</if>
+		</set>
+		where  T.LOG_ID = #{logId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_sys_logs where 1=1
+        <if test="logType != null and logType != ''"> and LOG_TYPE  = #{logType,jdbcType=VARCHAR}</if>
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_sys_logs where 1=1
+		<foreach collection="list" item="id" index="index" open=" and LOG_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm03sys.entity.SysLogs">
+		delete from t_sys_logs 
+		where  LOG_ID = #{logId,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

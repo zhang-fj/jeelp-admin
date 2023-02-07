@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.protal.modules.admin.mapper.TopicMapper">
+
+	<sql id="columns">
+		T.TOPIC_ID topicId ,
+		T.TOPIC_NAME topicName ,
+		T.TOPIC_DESC topicDesc ,
+		T.TOPIC_PATH topicPath ,
+		T.NAVIGATE_MENU navigateMenu ,
+		T.HOME_DISPLAY homeDisplay ,
+		T.HOME_INFO_SIZE homeInfoSize ,
+		T.HOME_INDEX homeIndex ,
+		T.HOME_TEMP homeTemp ,
+		T.SECONDARY_TEMP secondaryTemp ,
+		T.INFO_TEMP infoTemp ,
+		T.INFO_TYPE infoType,
+		T.SORT sort ,
+		T.INPUT_TIME inputTime ,
+		T.UPDATE_TIME updateTime ,
+		T.INPUT_USER inputUser ,
+		T.UPDATE_USER updateUser ,
+		T.DEL_MARK delMark 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_protal_topic T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.protal.modules.admin.entity.Topic" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/> 
+		from t_protal_topic T where 1=1
+        <if test="navigateMenu != null and navigateMenu != ''"> and T.NAVIGATE_MENU = #{navigateMenu,jdbcType=VARCHAR}</if>
+        <if test="homeDisplay != null and homeDisplay != ''"> and T.HOME_DISPLAY = #{homeDisplay,jdbcType=VARCHAR}</if>
+		<if test="topicName != null and topicName != ''"> and T.TOPIC_NAME like concat('%',#{topicName,jdbcType=VARCHAR},'%')</if>
+		<if test="topicDesc != null and topicDesc != ''"> and T.TOPIC_DESC like concat('%',#{topicDesc,jdbcType=VARCHAR},'%')</if>
+	    <choose>
+            <when test="sortName != null and sortName != ''">
+                order by T.${sortName} asc
+            </when>
+            <otherwise>
+                order by  T.sort asc
+            </otherwise>
+        </choose>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.protal.modules.admin.entity.Topic" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_protal_topic T
+		where  T.TOPIC_ID = #{topicId,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.protal.modules.admin.entity.Topic" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_protal_topic T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.protal.modules.admin.entity.Topic">
+		insert into t_protal_topic
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="topicId != null">TOPIC_ID,</if>
+	 		<if test="topicName != null">TOPIC_NAME,</if>
+	 		<if test="topicDesc != null">TOPIC_DESC,</if>
+	 		<if test="topicPath != null">TOPIC_PATH,</if>
+            <if test="navigateMenu != null">NAVIGATE_MENU,</if>
+	 		<if test="homeDisplay != null">HOME_DISPLAY,</if>
+	 		<if test="homeInfoSize != null">HOME_INFO_SIZE,</if>
+	 		<if test="homeIndex != null">HOME_INDEX,</if>
+	 		<if test="homeTemp != null">HOME_TEMP,</if>
+	 		<if test="secondaryTemp != null">SECONDARY_TEMP,</if>
+	 		<if test="infoTemp != null">INFO_TEMP,</if>
+	 		<if test="infoType != null">INFO_TYPE,</if>
+	 		<if test="sort != null">SORT,</if>
+	 		<if test="inputTime != null">INPUT_TIME,</if>
+	 		<if test="updateTime != null">UPDATE_TIME,</if>
+	 		<if test="inputUser != null">INPUT_USER,</if>
+	 		<if test="updateUser != null">UPDATE_USER,</if>
+	 		<if test="delMark != null">DEL_MARK,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="topicId != null">#{topicId,jdbcType=VARCHAR},</if>
+			<if test="topicName != null">#{topicName,jdbcType=VARCHAR},</if>
+			<if test="topicDesc != null">#{topicDesc,jdbcType=VARCHAR},</if>
+			<if test="topicPath != null">#{topicPath,jdbcType=VARCHAR},</if>
+            <if test="navigateMenu != null">#{navigateMenu,jdbcType=VARCHAR},</if>
+			<if test="homeDisplay != null">#{homeDisplay,jdbcType=VARCHAR},</if>
+			<if test="homeInfoSize != null">#{homeInfoSize,jdbcType=INTEGER},</if>
+			<if test="homeIndex != null">#{homeIndex,jdbcType=INTEGER},</if>
+			<if test="homeTemp != null">#{homeTemp,jdbcType=VARCHAR},</if>
+			<if test="secondaryTemp != null">#{secondaryTemp,jdbcType=VARCHAR},</if>
+			<if test="infoTemp != null">#{infoTemp,jdbcType=VARCHAR},</if>
+			<if test="infoType != null">#{infoType,jdbcType=VARCHAR},</if>
+			<if test="sort != null">#{sort,jdbcType=INTEGER},</if>
+			<if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">#{delMark,jdbcType=NUMERIC},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.protal.modules.admin.entity.Topic">
+		update t_protal_topic T
+		<set>
+			<if test="topicId != null">TOPIC_ID = #{topicId,jdbcType=VARCHAR},</if>
+			<if test="topicName != null">TOPIC_NAME = #{topicName,jdbcType=VARCHAR},</if>
+			<if test="topicDesc != null">TOPIC_DESC = #{topicDesc,jdbcType=VARCHAR},</if>
+			<if test="topicPath != null">TOPIC_PATH = #{topicPath,jdbcType=VARCHAR},</if>
+            <if test="navigateMenu != null">NAVIGATE_MENU = #{navigateMenu,jdbcType=VARCHAR},</if>
+			<if test="homeDisplay != null">HOME_DISPLAY = #{homeDisplay,jdbcType=VARCHAR},</if>
+			<if test="homeInfoSize != null">HOME_INFO_SIZE = #{homeInfoSize,jdbcType=INTEGER},</if>
+			<if test="homeIndex != null">HOME_INDEX = #{homeIndex,jdbcType=INTEGER},</if>
+			<if test="homeTemp != null">HOME_TEMP = #{homeTemp,jdbcType=VARCHAR},</if>
+			<if test="secondaryTemp != null">SECONDARY_TEMP = #{secondaryTemp,jdbcType=VARCHAR},</if>
+			<if test="infoTemp != null">INFO_TEMP = #{infoTemp,jdbcType=VARCHAR},</if>
+			<if test="infoType != null">INFO_TYPE = #{infoType,jdbcType=VARCHAR},</if>
+			<if test="sort != null">SORT = #{sort,jdbcType=INTEGER},</if>
+			<if test="inputTime != null">INPUT_TIME = #{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">INPUT_USER = #{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">DEL_MARK = #{delMark,jdbcType=NUMERIC},</if>
+		</set>
+		where  T.TOPIC_ID = #{topicId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_protal_topic where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_protal_topic where 1=1
+		<foreach collection="list" item="id" index="index" open=" and TOPIC_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.protal.modules.admin.entity.Topic">
+		delete from t_protal_topic 
+		where  TOPIC_ID = #{topicId,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

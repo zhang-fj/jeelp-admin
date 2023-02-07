@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm02priv.mapper.FuncMapper">
+
+	<sql id="columns">
+		T.FUNC_ID funcId ,
+		T.UP_FUNC_UUID upFuncUuid ,
+		T.FUNC_NAME funcName ,
+		T.FUNC_SHORT_NAME funcShortName ,
+		T.FUNC_ADDR funcAddr ,
+		T.COMPONENT component ,
+		T.IS_LEAF isLeaf ,
+		T.ICON icon ,
+		T.ORDER_NUM orderNum ,
+		T.OPEN_TYPE openType ,
+		T.INPUT_USER inputUser ,
+		T.INPUT_TIME inputTime ,
+		T.UPDATE_USER updateUser ,
+		T.UPDATE_TIME updateTime ,
+		T.DEL_MARK delMark 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_priv_func T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm02priv.entity.FuncEntity" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/>,
+			(select count(F.func_id) from t_priv_func F where F.UP_FUNC_UUID = T.FUNC_ID ) subFuncCount
+		from t_priv_func T where 1=1
+		<if test="pid != null and pid != ''"> and T.UP_FUNC_UUID = #{pid,jdbcType=VARCHAR}</if>
+		<if test="userId != null and userId != ''"> 
+			and exists(
+				select 1 from t_priv_role_func rf,t_priv_post_role ppr,t_priv_post_user ppu 
+				 where T.func_id = rf.func_id
+				   and rf.role_id = ppr.role_id 
+				   and ppr.post_id = ppu.post_id
+				   and PPU.USER_ID = #{userId,jdbcType=VARCHAR}
+			)
+		</if>
+		<if test="funcCode != null and funcCode != ''"> and T.FUNC_CODE like concat('%',#{funcCode,jdbcType=VARCHAR},'%')</if>
+		<if test="funcName != null and funcName != ''"> and T.FUNC_NAME like concat('%',#{funcName,jdbcType=VARCHAR},'%')</if>
+		<if test="funcShortName != null and funcShortName != ''"> and T.FUNC_SHORT_NAME like concat('%',#{funcShortName,jdbcType=VARCHAR},'%')</if>
+		order by T.ORDER_NUM
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm02priv.entity.FuncEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_priv_func T
+		where  T.FUNC_ID = #{funcId,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm02priv.entity.FuncEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_priv_func T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm02priv.entity.FuncEntity">
+		insert into t_priv_func
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="funcId != null">FUNC_ID,</if>
+            <if test="upFuncUuid != null">UP_FUNC_UUID,</if>
+            <if test="funcName != null">FUNC_NAME,</if>
+            <if test="funcShortName != null">FUNC_SHORT_NAME,</if>
+            <if test="funcAddr != null">FUNC_ADDR,</if>
+            <if test="component != null">COMPONENT,</if>
+            <if test="isLeaf != null">IS_LEAF,</if>
+            <if test="icon != null">ICON,</if>
+            <if test="orderNum != null">ORDER_NUM,</if>
+            <if test="openType != null">OPEN_TYPE,</if>
+            <if test="inputUser != null">INPUT_USER,</if>
+            <if test="inputTime != null">INPUT_TIME,</if>
+            <if test="updateUser != null">UPDATE_USER,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="delMark != null">DEL_MARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="funcId != null">#{funcId,jdbcType=VARCHAR},</if>
+            <if test="upFuncUuid != null">#{upFuncUuid,jdbcType=VARCHAR},</if>
+            <if test="funcName != null">#{funcName,jdbcType=VARCHAR},</if>
+            <if test="funcShortName != null">#{funcShortName,jdbcType=VARCHAR},</if>
+            <if test="funcAddr != null">#{funcAddr,jdbcType=VARCHAR},</if>
+            <if test="component != null">#{component,jdbcType=VARCHAR},</if>
+            <if test="isLeaf != null">#{isLeaf,jdbcType=VARCHAR},</if>
+            <if test="icon != null">#{icon,jdbcType=VARCHAR},</if>
+            <if test="orderNum != null">#{orderNum,jdbcType=NUMERIC},</if>
+            <if test="openType != null">#{openType,jdbcType=NUMERIC},</if>
+            <if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+            <if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="delMark != null">#{delMark,jdbcType=NUMERIC},</if>
+        </trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm02priv.entity.FuncEntity">
+		update t_priv_func T
+        <set>
+            <if test="funcId != null">FUNC_ID = #{funcId,jdbcType=VARCHAR},</if>
+            <if test="upFuncUuid != null">UP_FUNC_UUID = #{upFuncUuid,jdbcType=VARCHAR},</if>
+            <if test="funcName != null">FUNC_NAME = #{funcName,jdbcType=VARCHAR},</if>
+            <if test="funcShortName != null">FUNC_SHORT_NAME = #{funcShortName,jdbcType=VARCHAR},</if>
+            <if test="funcAddr != null">FUNC_ADDR = #{funcAddr,jdbcType=VARCHAR},</if>
+            <if test="component != null">COMPONENT = #{component,jdbcType=VARCHAR},</if>
+            <if test="isLeaf != null">IS_LEAF = #{isLeaf,jdbcType=VARCHAR},</if>
+            <if test="icon != null">ICON = #{icon,jdbcType=VARCHAR},</if>
+            <if test="orderNum != null">ORDER_NUM = #{orderNum,jdbcType=NUMERIC},</if>
+            <if test="openType != null">OPEN_TYPE = #{openType,jdbcType=NUMERIC},</if>
+            <if test="inputUser != null">INPUT_USER = #{inputUser,jdbcType=VARCHAR},</if>
+            <if test="inputTime != null">INPUT_TIME = #{inputTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateUser != null">UPDATE_USER = #{updateUser,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="delMark != null">DEL_MARK = #{delMark,jdbcType=NUMERIC},</if>
+        </set>
+		where  T.FUNC_ID = #{funcId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_priv_func where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_priv_func where 1=1
+		<foreach collection="list" item="id" index="index" open=" and FUNC_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm02priv.entity.FuncEntity">
+		delete from t_priv_func 
+		where  FUNC_ID = #{funcId,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

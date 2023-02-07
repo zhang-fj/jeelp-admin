@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm03sys.mapper.UnitMapper">
+
+	<sql id="columns">
+		T.CODE code ,
+		T.NAME name ,
+		T.SPELL spell ,
+		T.FULL_NAME fullName ,
+		T.SHORT_NAME shortName ,
+		T.POST_CODE postCode ,
+		T.ADDRESS address ,
+		T.TELPHONE telphone ,
+		T.EMAIL email ,
+		T.PCODE pcode ,
+		T.DESCS descs ,
+		T.UNIT_ORDER unitOrder 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_dict_unit T where 1=1
+	</select>
+	
+	<!-- 根据父机构代码，获取下级最大代码 -->
+	<select id="getSubMaxCode" resultType="java.lang.String">
+		select MAX(T.code) from t_dict_unit T where T.pcode = #{pcode,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm03sys.entity.UnitEntity" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/>,
+			(select count(s.code) from t_dict_unit s where s.pcode = t.code) subUnitCount 
+		from t_dict_unit T where 1=1
+		<if test="name != null and name != ''"> and T.NAME like concat('%',#{name,jdbcType=VARCHAR},'%')</if>
+		<if test="fullName != null and fullName != ''"> and T.FULL_NAME like concat('%',#{fullName,jdbcType=VARCHAR},'%')</if>
+		<if test="shortName != null and shortName != ''"> and T.SHORT_NAME like concat('%',#{shortName,jdbcType=VARCHAR},'%')</if>
+		<if test="pcode != null and pcode != ''"> and T.PCODE = #{pcode,jdbcType=VARCHAR}</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm03sys.entity.UnitEntity" parameterType="java.lang.String">
+		select
+			<include refid="columns"/>
+		from t_dict_unit T
+		where  T.CODE = #{code,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm03sys.entity.UnitEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_dict_unit T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm03sys.entity.UnitEntity">
+		insert into t_dict_unit
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="code != null">CODE,</if>
+	 		<if test="name != null">NAME,</if>
+	 		<if test="spell != null">SPELL,</if>
+	 		<if test="fullName != null">FULL_NAME,</if>
+	 		<if test="shortName != null">SHORT_NAME,</if>
+	 		<if test="postCode != null">POST_CODE,</if>
+	 		<if test="address != null">ADDRESS,</if>
+	 		<if test="telphone != null">TELPHONE,</if>
+	 		<if test="email != null">EMAIL,</if>
+	 		<if test="pcode != null">PCODE,</if>
+	 		<if test="descs != null">DESCS,</if>
+	 		<if test="unitOrder != null">UNIT_ORDER,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">#{code,jdbcType=VARCHAR},</if>
+			<if test="name != null">#{name,jdbcType=VARCHAR},</if>
+			<if test="spell != null">#{spell,jdbcType=VARCHAR},</if>
+			<if test="fullName != null">#{fullName,jdbcType=VARCHAR},</if>
+			<if test="shortName != null">#{shortName,jdbcType=VARCHAR},</if>
+			<if test="postCode != null">#{postCode,jdbcType=VARCHAR},</if>
+			<if test="address != null">#{address,jdbcType=VARCHAR},</if>
+			<if test="telphone != null">#{telphone,jdbcType=VARCHAR},</if>
+			<if test="email != null">#{email,jdbcType=VARCHAR},</if>
+			<if test="pcode != null">#{pcode,jdbcType=VARCHAR},</if>
+			<if test="descs != null">#{descs,jdbcType=VARCHAR},</if>
+			<if test="unitOrder != null">#{unitOrder,jdbcType=NUMERIC},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm03sys.entity.UnitEntity">
+		update t_dict_unit T
+		<set>
+			<if test="code != null">CODE = #{code,jdbcType=VARCHAR},</if>
+			<if test="name != null">NAME = #{name,jdbcType=VARCHAR},</if>
+			<if test="spell != null">SPELL = #{spell,jdbcType=VARCHAR},</if>
+			<if test="fullName != null">FULL_NAME = #{fullName,jdbcType=VARCHAR},</if>
+			<if test="shortName != null">SHORT_NAME = #{shortName,jdbcType=VARCHAR},</if>
+			<if test="postCode != null">POST_CODE = #{postCode,jdbcType=VARCHAR},</if>
+			<if test="address != null">ADDRESS = #{address,jdbcType=VARCHAR},</if>
+			<if test="telphone != null">TELPHONE = #{telphone,jdbcType=VARCHAR},</if>
+			<if test="email != null">EMAIL = #{email,jdbcType=VARCHAR},</if>
+			<if test="pcode != null">PCODE = #{pcode,jdbcType=VARCHAR},</if>
+			<if test="descs != null">DESCS = #{descs,jdbcType=VARCHAR},</if>
+			<if test="unitOrder != null">UNIT_ORDER = #{unitOrder,jdbcType=NUMERIC},</if>
+		</set>
+		where  T.CODE = #{code,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_dict_unit where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_dict_unit where 1=1
+		<foreach collection="list" item="id" index="index" open=" and CODE in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm03sys.entity.UnitEntity">
+		delete from t_dict_unit 
+		where  CODE = #{code,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

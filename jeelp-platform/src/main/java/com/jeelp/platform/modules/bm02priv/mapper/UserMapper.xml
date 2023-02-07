@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm02priv.mapper.UserMapper">
+
+	<sql id="columns">
+		T.USER_ID userId ,
+		T.EMP_CODE empCode ,
+		T.EMP_NAME empName ,
+		T.USER_NAME userName ,
+		T.EMP_UNITCODE empUnitcode ,
+		T.USER_PASSWORD userPassword ,
+		T.EMP_BUSINESS empBusiness ,
+		T.INDEX_PAGE indexPage ,
+		T.IS_LOCK isLock ,
+		T.IP ip ,
+		T.EMP_TYPE empType ,
+		T.EMP_PHONE empPhone ,
+		T.EMP_ORDER empOrder ,
+		T.EMP_EMAIL empEmail ,
+		T.INPUT_TIME inputTime ,
+		T.UPDATE_TIME updateTime ,
+		T.INPUT_USER inputUser ,
+		T.UPDATE_USER updateUser ,
+		T.DEL_MARK delMark 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_sys_user T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm02priv.entity.UserEntity" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/> 
+		from t_sys_user T where 1=1
+		<if test="empCode != null and empCode != ''"> and T.EMP_CODE like concat('%',#{empCode,jdbcType=VARCHAR},'%')</if>
+		<if test="unitCode != null and unitCode != ''"> and T.UNIT_CODE = #{unitCode,jdbcType=VARCHAR}</if>
+		<if test="empName != null and empName != ''"> and T.EMP_NAME like concat('%',#{empName,jdbcType=VARCHAR},'%')</if>
+		<if test="userName != null and userName != ''"> and T.USER_NAME like concat('%',#{userName,jdbcType=VARCHAR},'%')</if>
+		<if test="isLock != null and isLock != ''"> and T.IS_LOCK = #{isLock,jdbcType=CHAR}</if>
+		<if test="empPhone != null and empPhone != ''"> and T.EMP_PHONE like concat('%',#{empPhone,jdbcType=VARCHAR},'%')</if>
+		<if test="empEmail != null and empEmail != ''"> and T.EMP_EMAIL like concat('%',#{empEmail,jdbcType=VARCHAR},'%')</if>
+		<if test="personnel != null and personnel != ''"> and T.PERSONNEL = #{personnel,jdbcType=VARCHAR}</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm02priv.entity.UserEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_sys_user T
+		where  T.USER_ID = #{id,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm02priv.entity.UserEntity" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_sys_user T
+		where 1=1
+		<if test="userName != null and userName != ''"> and T.USER_NAME = #{userName,jdbcType=VARCHAR}</if>
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm02priv.entity.UserEntity">
+		insert into t_sys_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="userId != null">USER_ID,</if>
+	 		<if test="empCode != null">EMP_CODE,</if>
+	 		<if test="empName != null">EMP_NAME,</if>
+	 		<if test="userName != null">USER_NAME,</if>
+	 		<if test="empUnitcode != null">EMP_UNITCODE,</if>
+	 		<if test="userPassword != null">USER_PASSWORD,</if>
+	 		<if test="empBusiness != null">EMP_BUSINESS,</if>
+	 		<if test="indexPage != null">INDEX_PAGE,</if>
+	 		<if test="isLock != null">IS_LOCK,</if>
+	 		<if test="ip != null">IP,</if>
+	 		<if test="empType != null">EMP_TYPE,</if>
+	 		<if test="empPhone != null">EMP_PHONE,</if>
+	 		<if test="empOrder != null">EMP_ORDER,</if>
+	 		<if test="empEmail != null">EMP_EMAIL,</if>
+	 		<if test="inputTime != null">INPUT_TIME,</if>
+	 		<if test="updateTime != null">UPDATE_TIME,</if>
+	 		<if test="inputUser != null">INPUT_USER,</if>
+	 		<if test="updateUser != null">UPDATE_USER,</if>
+	 		<if test="delMark != null">DEL_MARK,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">#{userId,jdbcType=VARCHAR},</if>
+			<if test="empCode != null">#{empCode,jdbcType=VARCHAR},</if>
+			<if test="empName != null">#{empName,jdbcType=VARCHAR},</if>
+			<if test="userName != null">#{userName,jdbcType=VARCHAR},</if>
+			<if test="empUnitcode != null">#{empUnitcode,jdbcType=VARCHAR},</if>
+			<if test="userPassword != null">#{userPassword,jdbcType=VARCHAR},</if>
+			<if test="empBusiness != null">#{empBusiness,jdbcType=VARCHAR},</if>
+			<if test="indexPage != null">#{indexPage,jdbcType=VARCHAR},</if>
+			<if test="isLock != null">#{isLock,jdbcType=VARCHAR},</if>
+			<if test="ip != null">#{ip,jdbcType=VARCHAR},</if>
+			<if test="empType != null">#{empType,jdbcType=VARCHAR},</if>
+			<if test="empPhone != null">#{empPhone,jdbcType=VARCHAR},</if>
+			<if test="empOrder != null">#{empOrder,jdbcType=NUMERIC},</if>
+			<if test="empEmail != null">#{empEmail,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">#{delMark,jdbcType=NUMERIC},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm02priv.entity.UserEntity">
+		update t_sys_user T
+		<set>
+			<if test="userId != null">USER_ID = #{userId,jdbcType=VARCHAR},</if>
+			<if test="empCode != null">EMP_CODE = #{empCode,jdbcType=VARCHAR},</if>
+			<if test="empName != null">EMP_NAME = #{empName,jdbcType=VARCHAR},</if>
+			<if test="userName != null">USER_NAME = #{userName,jdbcType=VARCHAR},</if>
+			<if test="empUnitcode != null">EMP_UNITCODE = #{empUnitcode,jdbcType=VARCHAR},</if>
+			<if test="userPassword != null">USER_PASSWORD = #{userPassword,jdbcType=VARCHAR},</if>
+			<if test="empBusiness != null">EMP_BUSINESS = #{empBusiness,jdbcType=VARCHAR},</if>
+			<if test="indexPage != null">INDEX_PAGE = #{indexPage,jdbcType=VARCHAR},</if>
+			<if test="isLock != null">IS_LOCK = #{isLock,jdbcType=VARCHAR},</if>
+			<if test="ip != null">IP = #{ip,jdbcType=VARCHAR},</if>
+			<if test="empType != null">EMP_TYPE = #{empType,jdbcType=VARCHAR},</if>
+			<if test="empPhone != null">EMP_PHONE = #{empPhone,jdbcType=VARCHAR},</if>
+			<if test="empOrder != null">EMP_ORDER = #{empOrder,jdbcType=NUMERIC},</if>
+			<if test="empEmail != null">EMP_EMAIL = #{empEmail,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">INPUT_TIME = #{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">INPUT_USER = #{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">DEL_MARK = #{delMark,jdbcType=NUMERIC},</if>
+		</set>
+		where  T.USER_ID = #{userId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_sys_user where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_sys_user where 1=1
+		<foreach collection="list" item="id" index="index" open=" and USER_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm02priv.entity.UserEntity">
+		delete from t_sys_user 
+		where  USER_ID = #{userId,jdbcType=VARCHAR}  
+	</delete>
+
+	<!-- 根据用户id获取用户角色数组 -->
+	<select id="getRolesByUserId" resultType="java.lang.String">
+		select DISTINCT pr.ROLE_CODE from t_priv_role pr,t_priv_post_role ppr,t_priv_post_user ppu
+		where pr.ROLE_ID=ppr.ROLE_ID 
+		  and ppr.POST_ID=ppu.POST_ID
+		  and PPU.USER_ID = #{userId,jdbcType=VARCHAR}
+	</select>
+</mapper>

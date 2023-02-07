@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm03sys.mapper.AttachmentFileMapper">
+
+	<sql id="columns">
+		T.FILEID fileid ,
+		T.SRC_ID srcId ,
+		T.CONTENT_TYPE contentType,
+		T.TYPE type ,
+		T.EXT ext ,
+		T.ORI_FILE_NAME oriFileName ,
+		T.STORE_FILE_NAME storeFileName ,
+		T.STORE_PATH storePath ,
+		T.INPUT_TIME inputTime ,
+		T.UPDATE_TIME updateTime ,
+		T.INPUT_USER inputUser ,
+		T.UPDATE_USER updateUser ,
+		T.DEL_MARK delMark 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_sys_atta_file T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm03sys.entity.AttachmentFile" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/>,
+			AC.CATE_NAME typeName 
+		from t_sys_atta_file T,t_sys_atta_cate AC where 1=1 and T.TYPE = AC.CATE_CODE
+		<if test="srcId != null and srcId != ''"> and T.SRC_ID = #{srcId,jdbcType=VARCHAR}</if>
+		<if test="type != null and type != ''"> and T.TYPE = #{type,jdbcType=VARCHAR}</if>
+		<if test="ext != null and ext != ''"> and T.EXT like concat('%',#{ext,jdbcType=VARCHAR},'%')</if>
+		<if test="oriFileName != null and oriFileName != ''"> and T.ORI_FILE_NAME like concat('%',#{oriFileName,jdbcType=VARCHAR},'%')</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm03sys.entity.AttachmentFile" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_sys_atta_file T
+		where  T.FILEID = #{fileid,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm03sys.entity.AttachmentFile" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_sys_atta_file T
+		where 1=1
+		<if test="srcId != null and srcId != ''"> and T.SRC_ID = #{srcId,jdbcType=VARCHAR}</if>
+		<if test="type != null and type != ''"> and T.TYPE = #{type,jdbcType=VARCHAR}</if>
+		order by T.UPDATE_TIME desc
+		limit 0,1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm03sys.entity.AttachmentFile">
+		insert into t_sys_atta_file
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="fileid != null">FILEID,</if>
+	 		<if test="srcId != null">SRC_ID,</if>
+	 		<if test="contentType != null">CONTENT_TYPE,</if>
+	 		<if test="type != null">TYPE,</if>
+	 		<if test="ext != null">EXT,</if>
+	 		<if test="oriFileName != null">ORI_FILE_NAME,</if>
+	 		<if test="storeFileName != null">STORE_FILE_NAME,</if>
+	 		<if test="storePath != null">STORE_PATH,</if>
+	 		<if test="inputTime != null">INPUT_TIME,</if>
+	 		<if test="updateTime != null">UPDATE_TIME,</if>
+	 		<if test="inputUser != null">INPUT_USER,</if>
+	 		<if test="updateUser != null">UPDATE_USER,</if>
+	 		<if test="delMark != null">DEL_MARK,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fileid != null">#{fileid,jdbcType=VARCHAR},</if>
+			<if test="srcId != null">#{srcId,jdbcType=VARCHAR},</if>
+			<if test="contentType != null">#{contentType,jdbcType=VARCHAR},</if>
+			<if test="type != null">#{type,jdbcType=VARCHAR},</if>
+			<if test="ext != null">#{ext,jdbcType=VARCHAR},</if>
+			<if test="oriFileName != null">#{oriFileName,jdbcType=VARCHAR},</if>
+			<if test="storeFileName != null">#{storeFileName,jdbcType=VARCHAR},</if>
+			<if test="storePath != null">#{storePath,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">#{delMark,jdbcType=NUMERIC},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm03sys.entity.AttachmentFile">
+		update t_sys_atta_file T
+		<set>
+			<if test="fileid != null">FILEID = #{fileid,jdbcType=VARCHAR},</if>
+			<if test="srcId != null">SRC_ID = #{srcId,jdbcType=VARCHAR},</if>
+			<if test="contentType != null">CONTENT_TYPE = #{contentType,jdbcType=VARCHAR},</if>
+			<if test="type != null">TYPE = #{type,jdbcType=VARCHAR},</if>
+			<if test="ext != null">EXT = #{ext,jdbcType=VARCHAR},</if>
+			<if test="oriFileName != null">ORI_FILE_NAME = #{oriFileName,jdbcType=VARCHAR},</if>
+			<if test="storeFileName != null">STORE_FILE_NAME = #{storeFileName,jdbcType=VARCHAR},</if>
+			<if test="storePath != null">STORE_PATH = #{storePath,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">INPUT_TIME = #{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">INPUT_USER = #{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">DEL_MARK = #{delMark,jdbcType=NUMERIC},</if>
+		</set>
+		where  T.FILEID = #{fileid,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_sys_atta_file where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_sys_atta_file where 1=1
+		<foreach collection="list" item="id" index="index" open=" and FILEID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm03sys.entity.AttachmentFile">
+		delete from t_sys_atta_file 
+		where  FILEID = #{fileid,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeelp.platform.modules.bm04demo.mapper.DemoStudentMapper">
+
+	<sql id="columns">
+		T.STUD_ID studId ,
+		T.STUD_NAME studName ,
+		T.STUD_IDCARD studIdcard ,
+		T.STUD_GENDER studGender ,
+		T.STUD_CLASS studClass ,
+		T.STUD_N0 studN0 ,
+		T.STUD_PHONE studPhone ,
+		T.STUD_EMAIL studEmail ,
+		T.STUD_PHOTO studPhoto ,
+		T.STUD_RESUME studResume ,
+		T.INPUT_TIME inputTime ,
+		T.UPDATE_TIME updateTime ,
+		T.INPUT_USER inputUser ,
+		T.UPDATE_USER updateUser ,
+		T.DEL_MARK delMark 
+	</sql>
+
+	<!-- 根据查询信息获取信息总数量 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from t_demo_student T where 1=1
+	</select>
+
+	<!-- 根据参数查询所有数据 -->
+	<select id="findAll" resultType="com.jeelp.platform.modules.bm04demo.entity.DemoStudent" parameterType="java.util.Map">
+		select 
+			<include refid="columns"/> 
+		from t_demo_student T where 1=1
+		<if test="studName != null and studName != ''"> and T.STUD_NAME like concat('%',#{studName,jdbcType=VARCHAR},'%')</if>
+		<if test="studIdcard != null and studIdcard != ''"> and T.STUD_IDCARD like concat('%',#{studIdcard,jdbcType=VARCHAR},'%')</if>
+		<if test="studGender != null and studGender != ''"> and T.STUD_GENDER = #{studGender,jdbcType=VARCHAR}</if>
+		<if test="studN0 != null and studN0 != ''"> and T.STUD_N0 like concat('%',#{studN0,jdbcType=VARCHAR},'%')</if>
+		<if test="studPhone != null and studPhone != ''"> and T.STUD_PHONE like concat('%',#{studPhone,jdbcType=VARCHAR},'%')</if>
+	</select>
+
+	<!-- 根据id获取一条数据-->
+	<select id="selectByPK" resultType="com.jeelp.platform.modules.bm04demo.entity.DemoStudent" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_demo_student T
+		where  T.STUD_ID = #{studId,jdbcType=VARCHAR}  
+	</select>
+
+	<!-- 根据参数获取一条数据 -->
+	<select id="selectByPropertys" resultType="com.jeelp.platform.modules.bm04demo.entity.DemoStudent" parameterType="java.util.Map">
+		select
+			<include refid="columns"/>
+		from t_demo_student T
+		where 1=1
+	</select>
+
+	<!-- 添加一条数据 -->
+	<insert id="insert" parameterType="com.jeelp.platform.modules.bm04demo.entity.DemoStudent">
+		insert into t_demo_student
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		<if test="studId != null">STUD_ID,</if>
+	 		<if test="studName != null">STUD_NAME,</if>
+	 		<if test="studIdcard != null">STUD_IDCARD,</if>
+	 		<if test="studGender != null">STUD_GENDER,</if>
+	 		<if test="studClass != null">STUD_CLASS,</if>
+	 		<if test="studN0 != null">STUD_N0,</if>
+	 		<if test="studPhone != null">STUD_PHONE,</if>
+	 		<if test="studEmail != null">STUD_EMAIL,</if>
+	 		<if test="studPhoto != null">STUD_PHOTO,</if>
+	 		<if test="studResume != null">STUD_RESUME,</if>
+	 		<if test="inputTime != null">INPUT_TIME,</if>
+	 		<if test="updateTime != null">UPDATE_TIME,</if>
+	 		<if test="inputUser != null">INPUT_USER,</if>
+	 		<if test="updateUser != null">UPDATE_USER,</if>
+	 		<if test="delMark != null">DEL_MARK,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="studId != null">#{studId,jdbcType=VARCHAR},</if>
+			<if test="studName != null">#{studName,jdbcType=VARCHAR},</if>
+			<if test="studIdcard != null">#{studIdcard,jdbcType=VARCHAR},</if>
+			<if test="studGender != null">#{studGender,jdbcType=VARCHAR},</if>
+			<if test="studClass != null">#{studClass,jdbcType=VARCHAR},</if>
+			<if test="studN0 != null">#{studN0,jdbcType=VARCHAR},</if>
+			<if test="studPhone != null">#{studPhone,jdbcType=VARCHAR},</if>
+			<if test="studEmail != null">#{studEmail,jdbcType=VARCHAR},</if>
+			<if test="studPhoto != null">#{studPhoto,jdbcType=VARCHAR},</if>
+			<if test="studResume != null">#{studResume,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">#{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">#{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">#{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">#{delMark,jdbcType=NUMERIC},</if>
+		</trim>
+	</insert>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="com.jeelp.platform.modules.bm04demo.entity.DemoStudent">
+		update t_demo_student T
+		<set>
+			<if test="studId != null">STUD_ID = #{studId,jdbcType=VARCHAR},</if>
+			<if test="studName != null">STUD_NAME = #{studName,jdbcType=VARCHAR},</if>
+			<if test="studIdcard != null">STUD_IDCARD = #{studIdcard,jdbcType=VARCHAR},</if>
+			<if test="studGender != null">STUD_GENDER = #{studGender,jdbcType=VARCHAR},</if>
+			<if test="studClass != null">STUD_CLASS = #{studClass,jdbcType=VARCHAR},</if>
+			<if test="studN0 != null">STUD_N0 = #{studN0,jdbcType=VARCHAR},</if>
+			<if test="studPhone != null">STUD_PHONE = #{studPhone,jdbcType=VARCHAR},</if>
+			<if test="studEmail != null">STUD_EMAIL = #{studEmail,jdbcType=VARCHAR},</if>
+			<if test="studPhoto != null">STUD_PHOTO = #{studPhoto,jdbcType=VARCHAR},</if>
+			<if test="studResume != null">STUD_RESUME = #{studResume,jdbcType=VARCHAR},</if>
+			<if test="inputTime != null">INPUT_TIME = #{inputTime,jdbcType=TIMESTAMP},</if>
+			<if test="updateTime != null">UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},</if>
+			<if test="inputUser != null">INPUT_USER = #{inputUser,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="delMark != null">DEL_MARK = #{delMark,jdbcType=NUMERIC},</if>
+		</set>
+		where  T.STUD_ID = #{studId,jdbcType=VARCHAR}  
+	</update>
+
+	<!-- 根据参数删除 -->
+	<delete id="deleteByParams" parameterType="java.util.Map">
+		delete from t_demo_student where 1=1
+	</delete>
+	
+	<!-- 根据ids数组删除 -->
+	<delete id="deleteByIds" parameterType="java.util.Map">
+		delete from t_demo_student where 1=1
+		<foreach collection="list" item="id" index="index" open=" and STUD_ID in(" close=")" separator=",">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据实体删除一条数据 -->
+	<delete id="delete" parameterType="com.jeelp.platform.modules.bm04demo.entity.DemoStudent">
+		delete from t_demo_student 
+		where  STUD_ID = #{studId,jdbcType=VARCHAR}  
+	</delete>
+
+</mapper>
